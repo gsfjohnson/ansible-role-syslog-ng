@@ -18,6 +18,7 @@
   with_items:
     - syslog-ng
     - syslog-ng-redis
+    - syslog-ng-json
 
 - name: config
   template:
