@@ -18,3 +18,15 @@
   with_items:
     - syslog-ng
     - syslog-ng-redis
+
+- name: config
+  template:
+    src: "{{ item }}.j2"
+    dest: "/etc/syslog-ng/conf.d/{{ item }}"
+    owner: root
+    group: root
+    mode: 0644
+  with_items:
+    - 10-remote514-to-redis.conf
+  notify: svc restart syslog-ng
+
