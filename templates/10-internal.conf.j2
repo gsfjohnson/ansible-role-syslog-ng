@@ -1,0 +1,3 @@
+source s_internal { internal(); };
+destination d_syslognglog { file("/var/log/syslog-ng.log"); };
+log { source(s_internal); destination(d_syslognglog); };

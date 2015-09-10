@@ -20,7 +20,18 @@
     - syslog-ng-redis
     - syslog-ng-json
 
-- name: config
+- name: main config
+  template:
+    src: "{{ item }}.j2"
+    dest: "/etc/syslog-ng/{{ item }}"
+    owner: root
+    group: root
+    mode: 0644
+  with_items:
+    - syslog-ng.conf
+  notify: svc restart syslog-ng
+
+- name: config conf.d
   template:
     src: "{{ item }}.j2"
     dest: "/etc/syslog-ng/conf.d/{{ item }}"
@@ -28,6 +39,7 @@
     group: root
     mode: 0644
   with_items:
+    - 01-internal.conf
     - 10-remote514-to-redis.conf
   notify: svc restart syslog-ng
 
