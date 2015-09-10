@@ -1,0 +1,14 @@
+---
+galaxy_info:
+  author: gsfjohnson
+  description: syslog-ng ansible role
+  company: nil
+  license: Apache
+  min_ansible_version: 1.2
+  platforms:
+  - name: EL
+    versions:
+    - 7
+  categories:
+  - system
+dependencies:
