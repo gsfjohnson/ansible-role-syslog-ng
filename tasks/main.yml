@@ -43,3 +43,6 @@
     - 10-remote514-to-redis.conf
   notify: svc restart syslog-ng
 
+- name: service enable, start
+  service: name=syslog-ng state={{sng_svc_state}} enabled={{sng_svc_enabled}}
+
