@@ -7,6 +7,12 @@
     mode: 0644
   when: ansible_distribution_major_version == "6"
 
+- name: install deps
+  yum:
+    name: http://mirror.sfo12.us.leaseweb.net/epel/6/x86_64/hiredis-0.10.1-3.el6.x86_64.rpm
+    state: installed
+  when: ansible_distribution_major_version == "7"
+
 - name: install pkg el6
   yum:
     name: "{{item}}"
