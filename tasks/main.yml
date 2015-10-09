@@ -3,18 +3,16 @@
 - include: setup-RedHat.yml
   when: ansible_distribution == "RedHat" or ansible_distribution == "CentOS"
 
-- name: main config
+- name: main cfg template
   template:
-    src: "{{ item }}.j2"
-    dest: "/etc/syslog-ng/{{ item }}"
+    src: "syslog-ng_{{ansible_distribution}}-{{ansible_distribution_major_version}}.conf.j2"
+    dest: "/etc/syslog-ng/syslog-ng.conf"
     owner: root
     group: root
     mode: 0644
-  with_items:
-    - syslog-ng_{{ansible_distribution}}-{{ansible_distribution_major_version}}.conf
   notify: svc restart syslog-ng
 
-- name: config conf.d
+- name: conf.d templates
   template:
     src: "{{ item }}.j2"
     dest: "/etc/syslog-ng/conf.d/{{ item }}"
