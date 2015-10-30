@@ -3,3 +3,5 @@
 sng_svc_state: started
 sng_svc_enabled: yes
 
+sng_pkg_state: installed
+
