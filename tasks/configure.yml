@@ -1,0 +1,34 @@
+---
+
+- name: main cfg template
+  template:
+    src: "syslog-ng_{{ansible_distribution}}-{{ansible_distribution_major_version}}.conf.j2"
+    dest: "/etc/syslog-ng/syslog-ng.conf"
+    owner: root
+    group: root
+    mode: 0644
+  when: sng_cfg_template
+  notify: svc restart syslog-ng
+
+- name: templates conf.d files
+  template:
+    src={{item.src}}
+    dest={{item.dest}}
+    owner={{sng_owner | default('root')}}
+    group={{sng_group | default('root')}}
+    mode={{sng_mode | default('0644')}}
+  with_items: sng_template_files
+  notify: svc restart syslog-ng
+
+- name: copy conf.d files
+  copy:
+    src={{item.src}}
+    dest={{item.dest}}
+    owner={{sng_owner | default('root')}}
+    group={{sng_group | default('root')}}
+    mode={{sng_mode | default('0644')}}
+  with_items: sng_copy_files
+
+- name: service enable, start
+  service: name=syslog-ng state={{sng_svc_state}} enabled={{sng_svc_enabled}}
+

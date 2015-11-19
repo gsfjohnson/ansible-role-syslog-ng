@@ -5,3 +5,8 @@ sng_svc_enabled: yes
 
 sng_pkg_state: installed
 
+sng_cfg_template: true
+
+sng_template_files: []
+sng_copy_files: []
+

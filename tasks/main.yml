@@ -3,27 +3,5 @@
 - include: setup-RedHat.yml
   when: ansible_distribution == "RedHat" or ansible_distribution == "CentOS"
 
-- name: main cfg template
-  template:
-    src: "syslog-ng_{{ansible_distribution}}-{{ansible_distribution_major_version}}.conf.j2"
-    dest: "/etc/syslog-ng/syslog-ng.conf"
-    owner: root
-    group: root
-    mode: 0644
-  notify: svc restart syslog-ng
-
-- name: conf.d templates
-  template:
-    src: "{{ item }}.j2"
-    dest: "/etc/syslog-ng/conf.d/{{ item }}"
-    owner: root
-    group: root
-    mode: 0644
-  with_items:
-    - 01-internal.conf
-    - 10-remote514-to-redis.conf
-  notify: svc restart syslog-ng
-
-- name: service enable, start
-  service: name=syslog-ng state={{sng_svc_state}} enabled={{sng_svc_enabled}}
+- include: configure.yml
 
