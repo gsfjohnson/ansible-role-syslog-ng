@@ -19,9 +19,8 @@
     state: installed
   when: ansible_distribution == "CentOS" and ansible_distribution_major_version == "6"
   with_items:
-    - syslog-ng-3.7.1-1.el6.x86_64
-    - syslog-ng-redis-3.7.1-1.el6.x86_64
-    - syslog-ng-json-3.7.1-1.el6.x86_64
+    - syslog-ng
+    - syslog-ng-redis
 
 - name: install pkg RedHat-6/7 or CentOS-7
   yum:
