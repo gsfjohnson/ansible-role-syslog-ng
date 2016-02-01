@@ -2,7 +2,7 @@
 
 - name: main cfg template
   template:
-    src: "syslog-ng_{{ansible_distribution}}-{{ansible_distribution_major_version}}.conf.j2"
+    src: "syslog-ng_{{ansible_os_family}}-{{ansible_distribution_major_version}}.conf.j2"
     dest: "/etc/syslog-ng/syslog-ng.conf"
     owner: root
     group: root
