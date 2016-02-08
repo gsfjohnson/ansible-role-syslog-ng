@@ -28,6 +28,7 @@
     group={{sng_group | default('root')}}
     mode={{sng_mode | default('0644')}}
   with_items: sng_copy_files
+  notify: svc restart syslog-ng
 
 - name: service enable, start
   service: name=syslog-ng state={{sng_svc_state}} enabled={{sng_svc_enabled}}
