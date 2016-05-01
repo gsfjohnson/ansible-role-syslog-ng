@@ -7,7 +7,7 @@
     owner: root
     group: root
     mode: 0644
-  when: sng_cfg_template
+  when: sng_cfg_template is defined
   notify: svc restart syslog-ng
 
 - name: templates conf.d files
@@ -17,7 +17,7 @@
     owner={{sng_owner | default('root')}}
     group={{sng_group | default('root')}}
     mode={{sng_mode | default('0644')}}
-  with_items: sng_template_files
+  with_items: "{{sng_template_files}}"
   notify: svc restart syslog-ng
 
 - name: copy conf.d files
@@ -27,7 +27,7 @@
     owner={{sng_owner | default('root')}}
     group={{sng_group | default('root')}}
     mode={{sng_mode | default('0644')}}
-  with_items: sng_copy_files
+  with_items: "{{sng_copy_files}}"
   notify: svc restart syslog-ng
 
 - name: service enable, start
