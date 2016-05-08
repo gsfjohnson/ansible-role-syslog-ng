@@ -30,6 +30,31 @@
   with_items: "{{sng_copy_files}}"
   notify: svc restart syslog-ng
 
+- name: certificate content
+  copy:
+    content: "{{item.content}}"
+    dest: "/etc/pki/tls/{{item.type}}/{{item.filename}}"
+    owner: "{{item.owner|default(sng_user)}}"
+    group: "{{item.group|default(sng_group)}}"
+    mode: "{{item.mode|default(sng_cert_mode)}}"
+  with_items: "{{sng_certs}}"
+  when: item.type is defined and item.filename is defined and item.content is defined and item.src is not defined
+  notify: svc restart syslog-ng
+
+- name: certificate file
+  copy:
+    src: "{{item.file}}"
+    dest: "/etc/pki/tls/{{item.type}}/{{item.filename}}"
+    owner: "{{item.owner|default(sng_user)}}"
+    group: "{{item.group|default(sng_group)}}"
+    mode: "{{item.mode|default(sng_cert_mode)}}"
+  with_items: "{{sng_certs}}"
+  when: item.type is defined and item.filename is defined and item.file is defined and item.content is not defined
+  notify: svc restart syslog-ng
+
 - name: service enable, start
-  service: name=syslog-ng state={{sng_svc_state}} enabled={{sng_svc_enabled}}
+  service:
+    name: "{{sng_svc_name}}"
+    state: "{{sng_svc_state}}"
+    enabled: "{{sng_svc_enabled}}"
 

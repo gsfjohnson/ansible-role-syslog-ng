@@ -2,16 +2,22 @@
 
 sng_version: 3.6
 
+sng_svc_name: syslog-ng
 sng_svc_state: started
 sng_svc_enabled: yes
 
 sng_pkg_state: installed
+
+sng_user: root
+sng_group: root
 
 sng_cfg_template: true
 sng_conf_dir: /etc/syslog-ng/conf.d
 
 sng_templates: []
 sng_copy_files: []
+sng_certs: []
+sng_cert_mode: '0600'
 
 sng_conf_include_scl: true
 sng_conf_flush_lines: 0
