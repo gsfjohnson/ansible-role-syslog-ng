@@ -5,7 +5,11 @@
 {% for s in item.sources %}{% for (source, drivers) in s.iteritems() %}
 source {{source}} {
 {% for d in drivers %}{% for driver, params in d.iteritems() %}
-  {{driver}}( {% for p in params %}{% if p.empty is not defined %}{% for (key, value) in p.iteritems() %}{{key}}({{value}}) {% endfor %}{% endif %}{% endfor %});
+  {{driver}}({% for p in params %}{% if loop.first %}
+
+{% endif %}{% for (key, value) in p.iteritems() %}
+    {{key}}({{value}})
+{% endfor %}{% if loop.last %}  {% endif %}{% endfor %});
 {% endfor %}{% endfor %}
 };
 
