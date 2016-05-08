@@ -1,12 +1,19 @@
+{##
+###  Sources
+###}
+{% if item.sources is defined %}
 {% for s in item.sources %}{% for (source, drivers) in s.iteritems() %}
 source {{source}} {
 {% for d in drivers %}{% for driver, params in d.iteritems() %}
-  {{driver}}( {% for p in params %}{% for (key, value) in p.iteritems() %}{{key}}({{value}}) {% endfor %}{% endfor %});
+  {{driver}}( {% for p in params %}{% if p.empty is not defined %}{% for (key, value) in p.iteritems() %}{{key}}({{value}}) {% endfor %}{% endif %}{% endfor %});
 {% endfor %}{% endfor %}
 };
 
-{% endfor %}{% endfor %}
-
+{% endfor %}{% endfor %}{% endif %}
+{##
+###  Filters
+###}
+{% if item.filters is defined %}
 {% for f in item.filters %}{% for (filter, logic) in f.iteritems() %}
 filter {{filter}} {
 {% for line in logic %}
@@ -14,8 +21,11 @@ filter {{filter}} {
 {% endfor %}
 };
 
-{% endfor %}{% endfor %}
-
+{% endfor %}{% endfor %}{% endif %}
+{##
+###  Parsers
+###}
+{% if item.parsers is defined %}
 {% for p in item.parsers %}{% for (parser, logic) in p.iteritems() %}
 parser {{parser}} {
 {% for line in logic %}
@@ -23,8 +33,11 @@ parser {{parser}} {
 {% endfor %}
 };
 
-{% endfor %}{% endfor %}
-
+{% endfor %}{% endfor %}{% endif %}
+{##
+###  Destinations
+###}
+{% if item.destinations is defined %}
 {% for d in item.destinations %}{% for (dest, logic) in d.iteritems() %}
 destination {{dest}} {
 {% for line in logic %}
@@ -32,11 +45,14 @@ destination {{dest}} {
 {% endfor %}
 };
 
-{% endfor %}{% endfor %}
-
+{% endfor %}{% endfor %}{% endif %}
+{##
+###  Logs
+###}
+{% if item.logs is defined %}
 {% for l in item.logs %}
 {% if l.not is defined %}#{% set log = l.not %}{% endif %}{% if l.log is defined %}{% set log = l.log %}{% endif %}
 {% if log is defined %}
 log { {% for p in log %}{% for (key, value) in p.iteritems() %}{{key}}({{value}}); {% endfor %}{% endfor %}};
 {% endif %}
-{% endfor %}
+{% endfor %}{% endif %}
