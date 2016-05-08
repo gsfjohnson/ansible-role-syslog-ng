@@ -1,12 +1,25 @@
 ---
 
+sng_version: 3.6
+
 sng_svc_state: started
 sng_svc_enabled: yes
 
 sng_pkg_state: installed
 
 sng_cfg_template: true
+sng_conf_dir: /etc/syslog-ng/conf.d
 
-sng_template_files: []
+sng_templates: []
 sng_copy_files: []
+
+sng_conf_include_scl: true
+sng_conf_flush_lines: 0
+sng_conf_time_reopen: 5
+sng_conf_log_fifo_size: 4000
+sng_conf_chain_hostnames: "no"
+sng_conf_use_dns: "no"
+sng_conf_use_fqdn: "no"
+sng_conf_create_dirs: "no"
+sng_conf_keep_hostname: "yes"
 

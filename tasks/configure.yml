@@ -12,12 +12,12 @@
 
 - name: templates conf.d files
   template:
-    src={{item.src}}
-    dest={{item.dest}}
-    owner={{sng_owner | default('root')}}
-    group={{sng_group | default('root')}}
-    mode={{sng_mode | default('0644')}}
-  with_items: "{{sng_template_files}}"
+    src: "syslog-ng-confd.j2"
+    dest: "{{sng_conf_dir}}/{{item.dest}}"
+    owner: "{{sng_owner | default('root')}}"
+    group: "{{sng_group | default('root')}}"
+    mode: "{{sng_mode | default('0644')}}"
+  with_items: "{{sng_templates}}"
   notify: svc restart syslog-ng
 
 - name: copy conf.d files
