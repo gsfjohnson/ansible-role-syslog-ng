@@ -42,11 +42,19 @@ parser {{parser}} {
 ###  Destinations
 ###}
 {% if item.destinations is defined %}
-{% for d in item.destinations %}{% for (dest, logic) in d.iteritems() %}
+{% for d in item.destinations %}{% for (dest, drivers) in d.iteritems() %}
 destination {{dest}} {
-{% for line in logic %}
-  {{line}}
-{% endfor %}
+{% for d in drivers %}{% for driver, params in d.iteritems() %}
+  {{driver}}({% for p in params %}{% if loop.first %}
+
+{% endif %}{% for (key, value) in p.iteritems() %}
+{% if key == '_dblquote' %}
+    "{{value}}"
+{% else %}
+    {{key}}({{value}})
+{% endif %}
+{% endfor %}{% if loop.last %}  {% endif %}{% endfor %});
+{% endfor %}{% endfor %}
 };
 
 {% endfor %}{% endfor %}{% endif %}
