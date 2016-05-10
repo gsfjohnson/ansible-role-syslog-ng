@@ -1,5 +1,13 @@
 ---
+
 - name: svc restart syslog-ng
   service:
     name: syslog-ng
     state: restarted
+  notify: chmod syslog-ng.ctl
+
+- name: chmod syslog-ng.ctl
+  file:
+    name: "/var/lib/syslog-ng/syslog-ng.ctl"
+    mode: "go+w"
+
