@@ -10,7 +10,7 @@
   when: sng_cfg_template is defined
   notify: svc restart syslog-ng
 
-- name: templates conf.d files
+- name: conf.d templates
   template:
     src: "syslog-ng-confd.j2"
     dest: "{{sng_conf_dir}}/{{item.dest}}"
@@ -34,7 +34,7 @@
   copy:
     content: "{{item.content}}"
     dest: "/etc/pki/tls/{{item.type}}/{{item.filename}}"
-    owner: "{{item.owner|default(sng_user)}}"
+    owner: "{{item.owner|default(sng_owner)}}"
     group: "{{item.group|default(sng_group)}}"
     mode: "{{item.mode|default(sng_cert_mode)}}"
   with_items: "{{sng_certs}}"
@@ -45,12 +45,60 @@
   copy:
     src: "{{item.file}}"
     dest: "/etc/pki/tls/{{item.type}}/{{item.filename}}"
-    owner: "{{item.owner|default(sng_user)}}"
+    owner: "{{item.owner|default(sng_owner)}}"
     group: "{{item.group|default(sng_group)}}"
     mode: "{{item.mode|default(sng_cert_mode)}}"
   with_items: "{{sng_certs}}"
   when: item.type is defined and item.filename is defined and item.file is defined and item.content is not defined
   notify: svc restart syslog-ng
+
+- name: hashicorp vault /pki/issue
+  set_fact: sng_hvault_certs="{{ lookup('hashvault', 'method=write vaultkey=pki/issue/'+ sng_hvault_pki_role +' common_name=' + ansible_nodename) }}"
+  when: sng_hvault and sng_hvault_pki_role
+
+- name: hashicorp vault ca cert
+  copy:
+    content: "{{sng_hvault_certs.issuing_ca}}"
+    dest: "/etc/pki/tls/certs/syslog-ng_ca.crt"
+    owner: "{{sng_owner}}"
+    group: "{{sng_group}}"
+    mode: 0640
+  when: sng_hvault and sng_hvault_certs.issuing_ca is defined
+  notify: svc restart syslog-ng
+
+- name: hashicorp vault server cert
+  copy:
+    content: "{{sng_hvault_certs.certificate}}"
+    dest: "/etc/pki/tls/certs/syslog-ng.crt"
+    owner: "{{sng_owner}}"
+    group: "{{sng_group}}"
+    mode: 0640
+  when: sng_hvault and sng_hvault_certs.certificate is defined
+  notify: svc restart syslog-ng
+
+- name: hashicorp vault private key
+  copy:
+    content: "{{sng_hvault_certs.private_key}}"
+    dest: "/etc/pki/tls/private/syslog-ng.key"
+    owner: "{{sng_owner}}"
+    group: "{{sng_group}}"
+    mode: 0640
+  when: sng_hvault and sng_hvault_certs.private_key is defined
+  notify: svc restart syslog-ng
+
+- name: get ca hash
+  command: openssl x509 -noout -hash -in /etc/pki/tls/certs/syslog-ng_ca.crt
+  register: ca_hash
+
+- name: create ssl directory
+  file: path=/etc/syslog-ng/ssl state=directory mode=0755
+
+- name: symlink ca hash to ca cert
+  file:
+    src: /etc/pki/tls/certs/syslog-ng_ca.crt
+    dest: "/etc/syslog-ng/ssl/{{ca_hash.stdout}}.0"
+    state: link
+  when: ca_hash.stdout is defined
 
 - name: service enable, start
   service:

@@ -8,7 +8,7 @@ sng_svc_enabled: yes
 
 sng_pkg_state: installed
 
-sng_user: root
+sng_owner: root
 sng_group: root
 
 sng_cfg_template: true
@@ -28,4 +28,7 @@ sng_conf_use_dns: "no"
 sng_conf_use_fqdn: "no"
 sng_conf_create_dirs: "no"
 sng_conf_keep_hostname: "yes"
+
+sng_hvault: false
+sng_hvault_pki_role: prod
 
